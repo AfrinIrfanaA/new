@@ -1,0 +1,57 @@
+import pandas as pd
+import numpy as np
+
+def entropy(col):
+    # Calculate the frequency of each unique value
+    counts = col.value_counts()
+    probs = counts / counts.sum()
+    return -np.sum(probs * np.log2(probs + 1e-9))  # Adding a small value to avoid log2(0)
+
+def info_gain(data, attr, target):
+    total_entropy = entropy(data[target])
+    weighted_entropy = sum(
+        (len(subset) / len(data)) * entropy(subset[target])
+        for _, subset in data.groupby(attr)
+    )
+    return total_entropy - weighted_entropy
+
+def id3(data, features, target, parent_class=None):
+    if len(data[target].unique()) == 1:
+        return data[target].iloc[0]
+    elif data.empty or not features:
+        return parent_class
+
+    parent_class = data[target].mode()[0]
+    best_feature = max(features, key=lambda f: info_gain(data, f, target))
+    tree = {best_feature: {}}
+    features.remove(best_feature)
+
+    for value, subset in data.groupby(best_feature):
+        subtree = id3(subset, features[:], target, parent_class)
+        tree[best_feature][value] = subtree
+
+    return tree
+
+def print_tree(tree, indent=""):
+    if not isinstance(tree, dict):
+        print(f"{indent} -> [{tree}]")
+        return
+    for key, subtree in tree.items():
+        print(f"{indent}{key}")
+        for value, branch in subtree.items():
+            print(f"{indent}\t{value}", end="")
+            print_tree(branch, indent + "\t\t")
+
+# Example usage:
+if __name__ == "__main__":
+    data = {
+        'Outlook': ['Sunny', 'Sunny', 'Overcast', 'Rain', 'Rain', 'Rain', 'Overcast', 'Sunny', 'Sunny', 'Rain', 'Sunny', 'Overcast', 'Overcast', 'Rain'],
+        'Temperature': ['Hot', 'Hot', 'Hot', 'Mild', 'Cool', 'Cool', 'Cool', 'Mild', 'Cool', 'Mild', 'Mild', 'Mild', 'Hot', 'Mild'],
+        'Humidity': ['High', 'High', 'High', 'High', 'Normal', 'Normal', 'Normal', 'High', 'Normal', 'Normal', 'Normal', 'High', 'Normal', 'High'],
+        'Windy': ['False', 'True', 'False', 'False', 'False', 'True', 'True', 'False', 'False', 'False', 'True', 'True', 'False', 'True'],
+        'PlayTennis': ['No', 'No', 'Yes', 'Yes', 'Yes', 'No', 'Yes', 'No', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'No']
+    }
+    df = pd.DataFrame(data)
+    tree = id3(df, df.columns[:-1].tolist(), 'PlayTennis')
+    print("Decision Tree is:")
+    print_tree(tree)
