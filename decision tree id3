@@ -26,6 +26,16 @@ def id3(data, features, target="PlayTennis", parent_class=None):
         tree[best_feature][v] = subtree
     return tree
 
+def print_tree(tree, indent=""):
+    if not isinstance(tree, dict):
+        print(f" ->  ['{tree}']")
+        return
+    for key, value in tree.items():
+        print(f"{indent}{key}")
+        for k, v in value.items():
+            print(f"{indent}\t{k}", end="")
+            print_tree(v, indent + "\t\t")
+
 # Example usage:
 if __name__ == "__main__":
     data = {
@@ -37,4 +47,5 @@ if __name__ == "__main__":
     }
     df = pd.DataFrame(data)
     tree = id3(df, df.columns[:-1].tolist(), 'PlayTennis')
-    print(tree)
+    print("Decision Tree is:")
+    print_tree(tree)
