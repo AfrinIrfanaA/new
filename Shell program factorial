@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Function to calculate factorial
+factorial() {
+    if [ $1 -le 1 ]; then
+        echo 1
+    else
+        local temp=$(( $1 - 1 ))
+        local result=$(factorial $temp)
+        echo $(( $1 * result ))
+    fi
+}
+
+# Read number from user
+echo -n "Enter a number: "
+read number
+
+# Calculate factorial
+result=$(factorial $number)
+echo "Factorial of $number is $result"
