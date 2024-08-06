@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Algorithm
+# Step 1: Start the program
+# Step 2: Get the input from the user
+# Step 3: Calculate the factorial value
+# Step 4: Display the result
+# Step 5: Stop the program
+
+# Step 2: Get the input from the user
+echo "Enter the number:"
+read n
+
+# Initialize variables
+F=1
+i=1
+
+# Step 3: Calculate the factorial value
+if [ $n -eq 0 ]; then
+  F=1
+else
+  while [ $i -le $n ]; do
+    F=$((F * i))
+    i=$((i + 1))
+  done
+fi
+
+# Step 4: Display the result
+echo "The factorial of $n is $F"
+
+# Step 5: Stop the program
