@@ -1,0 +1,246 @@
+1. Working with Numpy Arrays
+python
+Copy code
+import numpy as np
+
+# Example data
+data = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+
+# Perform operations
+mean = np.mean(data)
+std_dev = np.std(data)
+
+# Print results
+print("Mean:", mean)
+print("Standard Deviation:", std_dev)
+2. Working with Pandas DataFrames
+python
+Copy code
+import pandas as pd
+
+# Load CSV into a DataFrame
+df = pd.read_csv('data.csv')
+
+# Perform operations
+mean_values = df.mean()
+std_dev_values = df.std()
+
+# Print results
+print("Mean Values:\n", mean_values)
+print("Standard Deviation Values:\n", std_dev_values)
+3. Basic Plots Using Matplotlib
+python
+Copy code
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load CSV into a DataFrame
+df = pd.read_csv('data.csv')
+
+# Basic line plot
+df.plot()
+plt.title('Basic Line Plot')
+plt.show()
+
+# Scatter plot
+plt.scatter(df['A'], df['B'])
+plt.xlabel('A')
+plt.ylabel('B')
+plt.title('Scatter Plot')
+plt.show()
+4. Frequency Distributions, Averages, Variability
+python
+Copy code
+import pandas as pd
+
+# Load CSV into a DataFrame
+df = pd.read_csv('data.csv')
+
+# Frequency distribution
+frequency_distribution = df['A'].value_counts()
+
+# Averages
+mean_values = df.mean()
+
+# Variability
+std_dev_values = df.std()
+
+# Print results
+print("Frequency Distribution:\n", frequency_distribution)
+print("Mean Values:\n", mean_values)
+print("Standard Deviation Values:\n", std_dev_values)
+5. Normal Curves, Correlation and Scatter Plots, Correlation Coefficient
+python
+Copy code
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load CSV into a DataFrame
+df = pd.read_csv('data.csv')
+
+# Normal curve (histogram)
+df['A'].plot(kind='hist', bins=30, density=True, alpha=0.7)
+plt.title('Histogram of A')
+plt.show()
+
+# Scatter plot with correlation coefficient
+plt.scatter(df['A'], df['B'])
+plt.xlabel('A')
+plt.ylabel('B')
+plt.title(f'Scatter Plot with Correlation Coefficient: {df["A"].corr(df["B"]):.2f}')
+plt.show()
+6. Regression
+python
+Copy code
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+
+# Load CSV into a DataFrame
+df = pd.read_csv('data.csv')
+
+# Simple linear regression
+X = df[['A']].values
+y = df['B'].values
+model = LinearRegression().fit(X, y)
+
+# Print regression parameters
+print(f'Intercept: {model.intercept_}')
+print(f'Slope: {model.coef_[0]}')
+
+# Plot regression line
+plt.scatter(df['A'], df['B'])
+plt.plot(df['A'], model.predict(X), color='red')
+plt.xlabel('A')
+plt.ylabel('B')
+plt.title('Linear Regression')
+plt.show()
+7. Z-Test
+python
+Copy code
+import numpy as np
+import scipy.stats as stats
+import matplotlib.pyplot as plt
+
+# Given data
+sample_mean = 110
+population_mean = 100
+population_std = 15
+sample_size = 50
+alpha = 0.05
+
+# Calculate Z-score and critical Z-score
+z_score = (sample_mean - population_mean) / (population_std / np.sqrt(sample_size))
+z_critical = stats.norm.ppf(1 - alpha)
+p_value = 1 - stats.norm.cdf(z_score)
+
+# Print results
+print('Z-Score:', z_score)
+print('Critical Z-Score:', z_critical)
+print('p-value:', p_value)
+print("Reject Null Hypothesis" if z_score > z_critical else "Fail to Reject Null Hypothesis")
+print("Reject Null Hypothesis" if p_value < alpha else "Fail to Reject Null Hypothesis")
+
+# Plotting
+x = np.linspace(-4, 4, 1000)
+y = stats.norm.pdf(x)
+plt.plot(x, y)
+plt.axvline(z_critical, color='r', linestyle='--', label='Critical Z-Score')
+plt.axvline(z_score, color='g', linestyle='--', label='Z-Score')
+plt.fill_between(x, 0, y, where=(x > z_critical), color='red', alpha=0.5, label='Rejection Region')
+plt.title('Z-Test')
+plt.xlabel('Z')
+plt.ylabel('Probability Density')
+plt.legend()
+plt.show()
+8. T-Test
+python
+Copy code
+import numpy as np
+import scipy.stats as stats
+
+# Example data
+data = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+population_mean = 5
+
+# Perform T-test
+t_stat, p_value = stats.ttest_1samp(data, population_mean)
+
+# Print results
+print(f'T-statistic: {t_stat}')
+print(f'P-value: {p_value}')
+print("Reject Null Hypothesis" if p_value < 0.05 else "Fail to Reject Null Hypothesis")
+9. ANOVA
+python
+Copy code
+import pandas as pd
+import scipy.stats as stats
+
+# Load CSV into a DataFrame
+df = pd.read_csv('data.csv')
+
+# Perform ANOVA
+anova_result = stats.f_oneway(df['A'], df['B'], df['C'])
+
+# Print results
+print(f'F-statistic: {anova_result.statistic}')
+print(f'P-value: {anova_result.pvalue}')
+print("Reject Null Hypothesis" if anova_result.pvalue < 0.05 else "Fail to Reject Null Hypothesis")
+10. Building and Validating Linear Models
+python
+Copy code
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load CSV into a DataFrame
+df = pd.read_csv('data.csv')
+
+# Split the data
+X_train, X_test, y_train, y_test = train_test_split(df[['A']], df['B'], test_size=0.2, random_state=0)
+
+# Train the model
+model = LinearRegression().fit(X_train, y_train)
+
+# Validate the model
+y_pred = model.predict(X_test)
+print(f'R^2 score: {model.score(X_test, y_test)}')
+11. Building and Validating Logistic Models
+python
+Copy code
+import pandas as pd
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+
+# Load CSV into a DataFrame
+df = pd.read_csv('data.csv')
+
+# Assume binary classification with 'C' as target
+X = df[['A', 'B']]
+y = (df['C'] > 0.5).astype(int)
+
+# Split the data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+
+# Train the model
+log_model = LogisticRegression().fit(X_train, y_train)
+
+# Validate the model
+y_pred = log_model.predict(X_test)
+print(f'Accuracy: {log_model.score(X_test, y_test)}')
+12. Time Series Analysis
+python
+Copy code
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load CSV into a DataFrame
+df = pd.read_csv('data.csv')
+
+# Assuming 'A' is the time series data
+df['A'].plot()
+plt.title('Time Series Analysis')
+plt.xlabel('Time')
+plt.ylabel('A')
+plt.show()
+Ensure you have the data.csv file in the correct format with columns A, B, and C. Adjust the file path and column names as necessary for your specific dataset.
